@@ -1,0 +1,79 @@
+﻿@model Music_Library.Models.MusicViewModels.GenreIndexData
+
+@{
+
+    ViewData["Title"] = "Genres";
+
+}﻿
+
+<h2>Genres</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Albums</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Genres)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["GenreID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{
+                        foreach (var album in item.AlbumGenres)
+                        {
+                            @album.Album.ID @: @album.Album.AlbumName <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Albums != null)
+{
+    <h3>Chosen albums by Selected Genre</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Album Name</th>
+            <th>Artist</th>
+            <th>Price</th>
+        </tr>
+
+        @foreach (var item in Model.Albums)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["AlbumID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { albumID = item.ID })
+                </td>
+                <td>@item.AlbumName</td>
+                <td>@item.Artist</td>
+                <td>@item.Price</td>
+            </tr>
+        }
+    </table>
+}
